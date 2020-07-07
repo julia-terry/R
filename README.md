@@ -6,8 +6,10 @@ This is a collection of my R-based projects used for bioinformatics.
 Here is the list of the corresponding files that accompany code:
   SampleMeansProportions: 1, 1(1), 1(2), 1(3)
   CoExpressionAnalysis: expression_data.txt
+</pre>
 
-# Instructions for Beginners
+##### Instructions for Beginners
+<pre>
 Install R
 	http://www.r-project.org
 	Click CRAN under download
