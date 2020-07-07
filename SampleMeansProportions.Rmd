@@ -1,0 +1,104 @@
+---
+title: "Sample means and proportions"
+author: "Julia Terry"
+date: "2/28/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Question 1
+
+Adult male height (X) follows (approximately) a normal distribution with a mean of 69 inches and a standard deviation of 2.8 inches.
+
+What proportion of males are more than 75 inches tall? In other words, what is P(X > 75)?
+
+In other words, I'm looking for the area shaded in the following image:
+
+![Question 1 graph](1.JPG)
+
+```{r}
+pop.mean = 69
+pop.sd = 2.8
+boundary =75
+area = 1 - pnorm(boundary, mean= pop.mean, sd=pop.sd)
+```
+The probability of a randomly selected man being `r boundary` inches or taller is: `r area`.
+
+
+***
+
+#Question 2
+
+Adult male height (x) follows a normal distribution with a mean of 69 inches and a standard deviation of 2.8 inches.
+
+What proportion of males are between 66 and 72 inches tall? In other words, what is P(66 < X <72)?
+
+In other words, I'm looking for the area shaded in the following image:
+
+![Question 2 graph](1 (1).JPG)
+
+```{r}
+pop.mean = 69
+pop.sd = 2.8
+boundaryOne =72
+boundaryTwo = 66
+areaOne = pnorm(boundaryOne, mean= pop.mean, sd=pop.sd)
+areaTwo = pnorm(boundaryTwo, mean= pop.mean, sd=pop.sd)
+areaFinal = areaOne - areaTwo
+```
+
+The probability of a randomly selected man being between `r boundaryTwo` and `r boundaryOne` inches tall is: `r areaFinal`.
+
+***
+
+#Question 3
+
+A random sample of 100 students is taken from the population of all part-time students in the US, for which the overall proportion of females is 0.6.
+
+There is a 70% chance that the sample proportion falls between what two values?
+
+In other words, I'm looking for the area shaded in the following image:
+
+![Question 3 graph](1 (2).JPG)
+
+```{r}
+sampleSize = 100
+pop.prop = .6
+sample.prop = .7
+pop.q = 1- pop.prop
+pop.sd = sqrt((pop.q * pop.prop) / sampleSize)
+secondX = qnorm(.85, mean=pop.prop, sd=pop.sd)
+firstX = qnorm(.15, mean=pop.prop, sd=pop.sd)
+```
+
+There is a 70% chance that the sample proportion falls in between `r firstX` and `r secondX`.
+
+***
+
+#Question 4 
+
+The proportion of left-handed people in the general population is about 0.1. Suppose a random sample of 225 people is observed.
+
+What is the probability that 40 or more people in the sample are left-handed? 
+
+
+In other words, I'm looking for the area shaded in the following image:
+ 
+![Question 4 graph](1 (3).JPG)
+
+```{r}
+sampleSize = 225
+pop.prop = .1
+sample.prop = 40/225
+pop.q = 1- pop.prop
+pop.sd = sqrt((pop.q * pop.prop) / sampleSize)
+firstX = pnorm(sample.prop, mean=pop.prop, sd=pop.sd)
+area = 1 - firstX
+```
+
+The probability that 40 or more people in the sample are left-handed is `r area`.
+
+***

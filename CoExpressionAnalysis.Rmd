@@ -1,0 +1,139 @@
+---
+title: "Co-Expression Analysis"
+author: "Julia Terry & Samantha Taylor"
+date: "June 22, 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+In this Markdown, we answer the following questions:
+
+How many genes are co-expressed with all three bait genes?
+How many genes are co-expressed with only two of the bait genes?
+How many genes are co-expressed with just one of the bait genes?
+
+Over the long rode of plant evolution, stomata were developed, assisting the plant with adapting to various environments. These stomata regulate water and gas travel through the plant's body. In the model plant of this markdown, Arabidopsis, three transcription factors are required to form stomata. These is the gene symbol speechless, AT5G53210, the gene symbol mute, AT3G06120, and the gene symbol fama, AT3G24140. Because these genes have a similar function, they also may have similar expression, or are co-expressed. In this markdown we will figure out if they indeed do.
+
+To answer these questions, we will mine data using a dataset from the Gene Expression Omnibus to identify genes that may also play a role in forming stomata. We will complete this by looking for genes whose expression is correlated to one, two, or three of the bait genes with a 0.5 or larger correlation coefficient.
+
+## Analysis & Results
+```{r cars}
+#Read the data file
+mydata = read.delim("expression_data.txt.gz",as.is=T,sep="\t", header=TRUE,quote="")
+mydata = as.matrix(mydata)
+
+#Pull the specific genes from the data table and reformat the genes to have their own matrices
+speechless = cor(mydata['AT5G53210', ], t(mydata[,]))
+mute = cor(mydata['AT3G06120', ], t(mydata[,]))
+fama = cor(mydata['AT3G24140', ], t(mydata[,]))
+speechlessList = unique(colnames(speechless)[which(speechless>=.5, arr.ind = TRUE)[,2]]) 
+muteList = unique(colnames(mute)[which(mute>=.5, arr.ind = TRUE)[,2]])
+famaList = unique(colnames(fama)[which(fama>=.5, arr.ind = TRUE)[,2]])
+
+#Print out the r values that correlate with the speechless gene only
+#There are 223 genes that correlate with speechless
+count = 0
+for(i in speechlessList){
+  if(i %in% muteList == FALSE){
+    if(i %in% famaList == FALSE){
+      count = count+1
+    }
+  }
+}
+
+#Print out the r values that correlate with the mute gene only
+#There are 122 genes that correlate with mute
+count2 = 0
+for(i in muteList){
+  if(i %in% speechlessList == FALSE){
+    if(i %in% famaList == FALSE){
+      count2 = count2 +1
+    }
+  }
+}
+
+#Print out the r values that correlate with the fama gene only
+#There are 747 genes that correlate with fama
+count3 = 0
+for(i in famaList){
+  if(i %in% muteList == FALSE){
+    if(i %in% speechlessList == FALSE){
+      count3 = count3 +1
+    }
+  }
+}
+
+#Print out the genes correlated in both fama and mute
+#There are 4 genes that correlate with both mute and fama: AT3G51760, AT5G47380, AT2G20875, and AT1G05230
+count4 = 0
+for(i in famaList){
+  if(i %in% muteList == TRUE){
+    count4 = count4 +1
+  }
+}
+
+#Print out the genes correlated in both fama and speechless
+#There are 248 genes that correlate with both speechless and fama
+count5 = 0
+for(i in famaList){
+  if(i %in% speechlessList == TRUE){
+    count5 = count5 +1
+  }
+}
+
+#Print out the genes correlated in both mute and speechless
+#There are 6 genes that correlate with both speechless and mute: AT5G60880, AT4G30720, AT5G47380, AT1G80080, AT2G20875, and AT1G05230
+count6 = 0
+for(i in muteList){
+  if(i %in% speechlessList == TRUE){
+    count6 = count6 +1
+  }
+}
+
+#Print out the genes correlated for all three - mute, fama, and speechless
+#There are 3 genes that correlate with mute, fama, and speechless: AT5G47380, AT2G20875, and AT1G05230
+count7 = 0
+for(i in famaList){
+  if(i %in% muteList == TRUE){
+    if(i %in% speechlessList == TRUE){
+      count7 = count7 +1
+    }
+  }
+}
+
+#A table summarizing the three genes correlated with all three lists
+a <- c("AT5G47380", "AT2G20875", "AT1G05230")
+b <- c("protein coding", "protein coding", "protein coding")
+c <- c("no", "yes", "maybe")
+d <- c("https://www.arabidopsis.org/servlets/TairObject?id=134275&type=locus","https://www.arabidopsis.org/servlets/TairObject?id=227898&type=locus","https://www.arabidopsis.org/servlets/TairObject?id=137977&type=locus")
+table <- data.frame("name" = a, "model type" = b, "stomta expression" = c, "description" = d)
+```
+```{r pressure, echo=FALSE}
+print(table)
+```
+## Conclusion
+
+This Markdown answered the following questions:
+
+**How many genes are co-expressed with all three bait genes?**  
+We showed that 3 genes are co-expressed with all three bait traits: AT5G47380, AT2G20875, and AT1G05230.
+
+**How many genes are co-expressed with only two of the bait genes?**  
+We showed that 4 genes are co-expressed with just fama and mute bait genes, 248 genes are co-expressed with just fama and speechless, and 6 genes are co-expressed with mute and speechless. This makes a total of 258.
+
+**How many genes are co-expressed with just one of the bait genes?**  
+We showed that 223 genes correlate only with speechless, 122 genes correlate with only mute, and 747 correlate only with fama.
+
+
+##Discussion
+
+From research found on www.arabidopsis.org, the gene AT5G47380 that is co-expressed by all three bait genes, has the model type of a protein coding and is only said to be involved in biological processing. It is an electron transporter and is found on chromosome 5. The gene is located in the nucleus. While the research does not explicitly state whether or not the gene has been shown to play a role in the stomata, it has been shown to be expressed in collective leaf structure and vascular leaf structure, in addition to being expressed in the flower and seed etc.
+
+From research found at the same website, the gene AT2G20875 has the protein coding model type and is located in the extracellular region. The gene encodes a secretory peptide (EPF1) that is involved with stomatal development. This peptide is related to EPF2 which controls stomatal complex patterning during stomatal development.
+
+The final gene co-expressed by all three bait genes, AT1G05230, also is said to have a protein coding model type according to www.arabidopsis.org. This gene is located in the nucleus and is only said to be expressed in the stem, vascular leaf, guard cells, etc. of the plant. However, in the publications portion of the page, stomatal development is mentioned for this gene in a journal titled "Development" with an article titled "Arabidopsis homeodomain-leucine zipper IV proteins promote stomatal development and ectopically induce stomata beyond the epidermis" by Peterson et al.
