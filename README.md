@@ -21,6 +21,6 @@ Install RStudio Desktop
 	Download and run installer for your platform
 How to make a knitted Markdown
 	In console: install.packages('knitr', dependencies = TRUE)
-	Create a R Markdown document (many of my files are already in this format)
+	Create a R Markdown document
 	File -> Compile Report -> Compile (HTML format)
 </pre>
